@@ -1,40 +1,51 @@
 # Lorum Ricksum
 
-Reconstruction of the original Rick and Morty placeholder-text generator, formerly at `lorumricksum.co.uk`.
+**Lorem Ipsum + Rum + Rick Quotes = Lorum Ricksum**
 
-## Architecture (Cloudflare Pages-ready)
+A Rick and Morty-themed placeholder-text generator, originally published at `lorumricksum.co.uk` in 2021–22. It uses dialogue attributed to Rick Sanchez to produce random words or paragraphs for use as placeholder text.
 
-This is now a **100% static website**. All word/paragraph generation happens in `script.js` in the browser. The 518 Rick dialogue excerpts are stored in `quotes.txt`, loaded once by `fetch()` and cached for the page session. **PHP is no longer called.**
+**Live site:** https://southernadd-cmyk.github.io/LorumRicksum/
 
-The original interaction is preserved:
-- Select **Words** or **Paragraphs**
-- Choose a quantity (1–999)
-- Toggle Pickle Rick to include HTML `<p>` tags in copied output
-- Generate and copy text
+## How to use it
 
-## Cloudflare Pages deployment
+1. Select **Words** or **Paragraphs**.
+2. Enter the number you want to generate (up to 999).
+3. Click **Generate Text**.
+4. Click **Pickle Rick** to toggle literal `<p>` and `</p>` tags around each generated paragraph. This also updates text already on screen.
+5. Use the **Copy** button to copy the displayed output, including tags when they are enabled.
 
-1. In Cloudflare Dashboard, go to **Workers & Pages** → **Create** → **Pages** → connect Git.
-2. Select GitHub repository `southernadd-cmyk/LorumRicksum` and branch `main`.
-3. Set Framework preset **None**, build command **empty**, and build output directory **/** (repository root; Cloudflare may display it as `.`).
-4. Deploy. Cloudflare provides a `*.pages.dev` URL.
+The number selector counts words in **Words** mode and paragraphs in **Paragraphs** mode.
 
-This needs **no PHP runtime, server, Docker, database, or environment variables**.
+## How it works
 
-## Test locally
+The current edition is a **static HTML, CSS and JavaScript site**. The browser loads `quotes.txt` and generates the text locally with `script.js`; it does not require PHP, a server-side API, a database or a build step.
 
-Use a static HTTP server (do not open the file directly because `fetch('quotes.txt')` requires HTTP):
+- `index.html` — page structure and controls
+- `style.css` — layout and visual styling
+- `script.js` — text generation, tag toggle and copying
+- `quotes.txt` — 518 Rick-related dialogue lines extracted from the owner's supplied `RickAndMortyScripts.csv`
+- `.github/workflows/pages.yml` — automatic GitHub Pages deployment from `main`
 
-```
+## Run locally
+
+Serve the repository directory over HTTP (opening `index.html` directly as a `file://` URL can prevent the browser from loading `quotes.txt`):
+
+```bash
 python -m http.server 8000
 ```
 
 Then open http://localhost:8000/.
 
-## Preservation notes
+## Hosting
 
-The frontend layout was reconstructed using the known original HTML / styling and is not a byte-for-byte copy. The PHP implementation `request.php` and `Dockerfile` remain **temporarily in the repository for rollback of the still-running Render instance**; Cloudflare Pages ignores them. Once Cloudflare is live and tested they can be deleted safely.
+This project is **deployed to GitHub Pages**, not Cloudflare Pages. Updates pushed to `main` are automatically published by the GitHub Actions workflow.
 
-Images: original paper textures `paper3.png` and `paper4.png` have not been recovered. Pickle Rick is currently an externally hosted image.
+The repository still contains `request.php` and a `Dockerfile` from an earlier, server-hosted reconstruction. **Neither is used by the GitHub Pages version.** The currently functioning generator is entirely browser-based.
 
-Dialogue data is derived from the owner's uploaded RickAndMortyScripts.csv. Original backend PHP source was not recovered.
+## Restoration notes
+
+This is a **reconstruction**, not a recovered copy of every original file. The page has been restyled using a screenshot of the old website as a reference, while retaining the original layout concept: wide header, controls on the left, and a tilted paper-like output area on the right.
+
+The original PHP source and original paper texture files (`paper3.png` and `paper4.png`) were not recovered. The Pickle Rick image is loaded from an external image URL, so its availability depends on that host.
+
+The current text corpus comes from the CSV supplied for this restoration, not from a recovered copy of the original site's backend data.
