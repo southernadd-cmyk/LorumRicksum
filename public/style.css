@@ -1,0 +1,22 @@
+@font-face{font-family:'Get Schwifty';src:url('https://s3-us-west-2.amazonaws.com/s.cdpn.io/3089507/get-schwifty.woff') format('woff')}
+body{margin:0;min-height:100vh;background:#efefef;border-left:10px solid #cfdbdb;border-right:10px solid #cfdbdb}
+.grid-container{display:grid;grid-template-columns:1fr 1fr;grid-template-areas:"heading heading" "options text";gap:0}
+.heading{grid-area:heading;padding:20px 28px 10px}
+h1{font-family:'Get Schwifty',cursive;color:#4e8225;text-shadow:2px 2px #000;font-size:6rem;float:right}
+h2{font-family:'Pangolin',cursive;color:#000;font-size:2rem;line-height:1.35}
+.options{grid-area:options;background:#cfdbdb;margin:0;padding:24px 4vw 40px}
+.text{grid-area:text;margin:5vh 5vw;padding:3vw;background:#fff;min-height:50vh;max-height:70vh;overflow:auto;border-left:6px solid #2196f3;transform:rotate(2deg);background-image:url('paper3.png');background-size:cover}
+#words{font-family:'Pangolin',cursive;font-size:2.1rem;line-height:1.55;margin-top:14px;white-space:normal}
+.radio{display:flex;align-items:center;gap:15px;background:transparent}
+.radiochoice{font-family:'Get Schwifty',cursive;font-size:2.5rem;background:#454857;color:#fff;padding:12px;border-radius:4px;cursor:pointer}
+.radiochoice:has(input:checked){background:linear-gradient(#95d891,#74bbad);color:#000}
+.radio input{width:20px;height:20px;margin:0 7px 0 0;position:static}
+.radio span{font-family:'Pangolin',cursive;font-size:2rem}
+.textInput{font-family:'Get Schwifty',cursive;text-align:center;font-size:2.5rem!important;font-weight:900;background:linear-gradient(#95d891,#74bbad);border-radius:50%;width:100px;height:100px}
+#ptags{accent-color:#4e8225;width:20px;height:20px}
+.picklerick{display:inline-flex;align-items:center;gap:16px;cursor:pointer;margin:20px 0}
+.picklerick img{width:95px;height:110px;object-fit:contain;transition:transform .2s}
+#ptags:checked+.picklerick img{transform:scale(.92)}
+button.btn-success{font-family:'Get Schwifty',cursive;font-size:2.5rem!important;background:linear-gradient(#95d891,#74bbad)!important;color:#000!important;text-shadow:1px 1px #79bfa9;padding:12px 20px}
+#copybutt{float:right;font-size:1.5rem!important;margin:0 0 15px 15px}
+@media(max-width:800px){.grid-container{grid-template-columns:1fr;grid-template-areas:"heading" "options" "text"}h1{float:none;font-size:4rem}.text{margin:30px;transform:rotate(1deg)}.radio{flex-wrap:wrap}#words{font-size:1.8rem}}
