@@ -1,30 +1,92 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Lorum Ricksum</title>
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-<link href="https://fonts.googleapis.com/css2?family=Pangolin&display=swap" rel="stylesheet">
-<script src="https://kit.fontawesome.com/b3000ea2ff.js" crossorigin="anonymous"></script>
-<link rel="stylesheet" href="style.css">
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#e9eee9">
+  <meta name="description" content="Generate Rick and Morty themed placeholder text — by words or paragraphs.">
+  <title>Lorum Ricksum — Rick and Morty Placeholder Text</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pangolin&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div class="grid-container">
-<header class="heading container-fluid">
-<h1>Lorum Ricksum</h1>
-<h2>Lorem Ipsum + Rum + Rick Quotes = Lorum Ricksum</h2>
-<h2>Generate some placeholder text from things Rick Sanchez has said in Rick &amp; Morty.</h2>
-<h2>I made this to help me learn AJAX - I also do paintings - Check out my <a target="_blank" rel="noopener noreferrer" href="https://www.instagram.com/adams_lockdown_paintings/">instagram</a> if you're in to abstract art!</h2>
-</header>
-<section class="text"><button id="copybutt" class="butts btn btn-success" onclick="CopyToClipboard()" title="Copy text" aria-label="Copy text"><i class="fas fa-copy"></i> Copy</button><div id="words" aria-live="polite"></div></section>
-<section class="options container-fluid">
-<h2>How to generate text:</h2>
-<div class="radio"><label class="radiochoice"><input label="Words" type="radio" name="wordtype" id="wordchoice" checked> Words</label><span>OR</span><label class="radiochoice"><input label="Paragraphs" type="radio" name="wordtype" id="parachoice"> Paragraphs</label></div>
-<h2>Number needed:</h2><input class="form-control textInput" value="5" id="num" type="number" min="0" max="999" aria-label="Number needed">
-<h2>Click on Pickle Rick to toggle &lt;p&gt; tags in output.</h2>
-<input type="checkbox" id="ptags" checked><label for="ptags" class="picklerick"><img alt="Pickle Rick" src="https://static.wikia.nocookie.net/rickandmorty/images/4/41/Pickle_rick_transparent_edgetrimmed.png"><span> &lt;p&gt; tags</span></label>
-<button type="button" id="gobut" class="butts btn btn-success" onclick="showWords(document.getElementById('num').value)">GENERATE TEXT <i class="fas fa-edit"></i></button>
-</section></div>
-<script src="script.js"></script>
+  <div class="page-shell">
+    <header class="site-header">
+      <div class="brand">
+        <p class="eyebrow">Rick &amp; Morty placeholder text generator</p>
+        <h1>Lorum Ricksum</h1>
+        <p class="tagline">Lorem Ipsum + Rum + Rick Quotes = Lorum Ricksum</p>
+        <p class="intro">Generate placeholder text from things Rick Sanchez has said in Rick &amp; Morty.</p>
+      </div>
+      <div class="portal-ring" aria-hidden="true"></div>
+    </header>
+
+    <main class="layout">
+      <section class="controls card" aria-labelledby="options-heading">
+        <div class="section-heading">
+          <span class="step">01</span>
+          <div>
+            <h2 id="options-heading">Make some text</h2>
+            <p class="muted">Choose your format and let Rick do the talking.</p>
+          </div>
+        </div>
+
+        <fieldset class="field">
+          <legend>How to generate text</legend>
+          <div class="choice-group">
+            <label class="radiochoice" for="wordchoice">
+              <input type="radio" name="wordtype" id="wordchoice" checked>
+              <span>Words</span>
+            </label>
+            <label class="radiochoice" for="parachoice">
+              <input type="radio" name="wordtype" id="parachoice">
+              <span>Paragraphs</span>
+            </label>
+          </div>
+        </fieldset>
+
+        <div class="field number-field">
+          <label for="num">Number needed</label>
+          <input class="textInput" id="num" value="5" type="number" min="0" max="999" step="1" inputmode="numeric">
+        </div>
+
+        <div class="field toggle-field">
+          <div>
+            <label for="ptags" class="toggle-title">Include HTML &lt;p&gt; tags</label>
+            <p class="muted">Click Pickle Rick to toggle tags in the generated output.</p>
+          </div>
+          <input type="checkbox" id="ptags" checked>
+          <label for="ptags" class="picklerick">
+            <img alt="Pickle Rick toggle" src="https://static.wikia.nocookie.net/rickandmorty/images/4/41/Pickle_rick_transparent_edgetrimmed.png" loading="lazy">
+            <span class="toggle-state" aria-hidden="true">&lt;p&gt;</span>
+          </label>
+        </div>
+
+        <button type="button" id="gobut" class="primary-button" onclick="showWords(document.getElementById('num').value)">
+          GENERATE TEXT <span aria-hidden="true">↗</span>
+        </button>
+      </section>
+
+      <section class="result card" aria-labelledby="result-heading">
+        <div class="result-header">
+          <div>
+            <span class="step">02</span>
+            <h2 id="result-heading">Your text</h2>
+          </div>
+          <button id="copybutt" class="copy-button" type="button" onclick="CopyToClipboard()" aria-label="Copy generated text" title="Copy generated text">
+            Copy text <span aria-hidden="true">⧉</span>
+          </button>
+        </div>
+        <div class="paper">
+          <div id="words" aria-live="polite" aria-atomic="true"></div>
+          <p class="empty-hint">Your interdimensional placeholder text will appear here.</p>
+        </div>
+      </section>
+    </main>
+    <footer class="footer">Wubba Lubba Dub Dub.</footer>
+  </div>
+  <script src="script.js"></script>
 </body>
 </html>
