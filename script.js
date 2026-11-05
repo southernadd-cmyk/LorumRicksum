@@ -1,33 +1,110 @@
-// Reconstructed to preserve the original 2022 AJAX GET contract.
-function CopyToClipboard() {
-  const target = document.getElementById('words');
-  const selection = window.getSelection();
-  const range = document.createRange();
-  range.selectNodeContents(target);
-  selection.removeAllRanges();
-  selection.addRange(range);
-  try { document.execCommand('copy'); }
-  finally { selection.removeAllRanges(); }
-  document.getElementById('copybutt').blur();
+// Lorum Ricksum — static JavaScript implementation.
+// The original 2022 interface is retained; no PHP or server-side code is needed.
+let dialoguePromise;
+
+function loadDialogue() {
+  if (!dialoguePromise) {
+    dialoguePromise = fetch('quotes.txt')
+      .then(response => {
+        if (!response.ok) throw new Error('Dialogue file could not be loaded (' + response.status + ')');
+        return response.text();
+      })
+      .then(text => {
+        const lines = text.split(/\r?\n/u).map(line => line.trim()).filter(Boolean);
+        if (lines.length === 0) throw new Error('The dialogue file is empty.');
+        return lines;
+      })
+      .catch(error => { dialoguePromise = undefined; throw error; });
+  }
+  return dialoguePromise;
 }
-function showWords(num) {
+
+function randomLine(lines) {
+  return lines[Math.floor(Math.random() * lines.length)];
+}
+
+function generateWords(lines, amount) {
+  const output = [];
+  while (output.length < amount) {
+    const words = randomLine(lines).split(/\s+/u).filter(Boolean);
+    output.push(...words.slice(0, amount - output.length));
+  }
+  return output.join(' ');
+}
+
+function generateParagraphs(lines, amount) {
+  return Array.from({length: amount}, () => {
+    const lineCount = 4 + Math.floor(Math.random() * 4);
+    return Array.from({length: lineCount}, () => randomLine(lines)).join(' ');
+  });
+}
+
+function renderOutput(paragraphs, includeTags) {
   const target = document.getElementById('words');
-  const btn = document.getElementById('gobut');
-  const count = Math.min(999, Math.max(0, parseInt(num, 10) || 0));
-  if (count === 0) { target.textContent=''; return; }
-  const ptags = document.getElementById('ptags').checked ? 'p' : 'none';
-  const param = document.getElementById('wordchoice').checked ? 'words' : 'para';
-  btn.disabled = true;
-  const old = btn.innerHTML;
-  btn.textContent = 'DOING SCIENCE STUFF';
-  const xhr = new XMLHttpRequest();
-  xhr.onreadystatechange = function () {
-    if (xhr.readyState === 4) {
-      if (xhr.status === 200) target.innerHTML = xhr.responseText;
-      else target.textContent = 'Could not generate text. Please try again.';
-      btn.disabled = false; btn.innerHTML = old;
+  target.replaceChildren();
+  if (includeTags) {
+    const fragment = document.createDocumentFragment();
+    for (const paragraph of paragraphs) {
+      const node = document.createElement('p');
+      node.textContent = paragraph;
+      fragment.appendChild(node);
     }
-  };
-  xhr.open('GET', 'request.php?' + param + '=' + count + '&ptags=' + ptags, true);
-  xhr.send();
+    target.appendChild(fragment);
+  } else {
+    target.textContent = paragraphs.join('\n\n');
+    target.style.whiteSpace = 'pre-wrap';
+  }
+  if (includeTags) target.style.whiteSpace = 'normal';
+}
+
+async function showWords(num) {
+  const output = document.getElementById('words');
+  const button = document.getElementById('gobut');
+  const parsed = Number.parseInt(num, 10);
+  const amount = Number.isFinite(parsed) ? Math.max(0, Math.min(999, parsed)) : 0;
+  if (amount === 0) { output.replaceChildren(); return; }
+  if (button.disabled) return;
+
+  const asWords = document.getElementById('wordchoice').checked;
+  const includeTags = document.getElementById('ptags').checked;
+  const originalButtonHTML = button.innerHTML;
+  button.disabled = true;
+  button.textContent = 'DOING SCIENCE STUFF';
+
+  try {
+    const lines = await loadDialogue();
+    const paragraphs = asWords
+      ? [generateWords(lines, amount)]
+      : generateParagraphs(lines, amount);
+    renderOutput(paragraphs, includeTags);
+  } catch (error) {
+    output.textContent = 'Could not generate text. ' + error.message;
+  } finally {
+    button.disabled = false;
+    button.innerHTML = originalButtonHTML;
+  }
+}
+
+async function CopyToClipboard() {
+  const target = document.getElementById('words');
+  const includeTags = document.getElementById('ptags').checked;
+  const content = includeTags
+    ? Array.from(target.querySelectorAll('p')).map(p => '<p>' + p.textContent.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</p>').join('\n')
+    : target.textContent;
+  try {
+    if (navigator.clipboard?.writeText) {
+      await navigator.clipboard.writeText(content);
+    } else {
+      const selection = window.getSelection();
+      const range = document.createRange();
+      range.selectNodeContents(target);
+      selection.removeAllRanges();
+      selection.addRange(range);
+      document.execCommand('copy');
+      selection.removeAllRanges();
+    }
+  } catch (error) {
+    console.error('Clipboard copy failed:', error);
+  }
+  document.getElementById('copybutt').blur();
 }
