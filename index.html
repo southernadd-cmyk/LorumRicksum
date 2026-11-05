@@ -3,89 +3,64 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#e9eee9">
-  <meta name="description" content="Generate Rick and Morty themed placeholder text — by words or paragraphs.">
-  <title>Lorum Ricksum — Rick and Morty Placeholder Text</title>
+  <meta name="theme-color" content="#efefef">
+  <meta name="description" content="Rick and Morty themed placeholder text generator.">
+  <title>Lorum Ricksum</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Pangolin&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <div class="page-shell">
-    <header class="site-header">
-      <div class="brand">
-        <p class="eyebrow">Rick &amp; Morty placeholder text generator</p>
-        <h1>Lorum Ricksum</h1>
-        <p class="tagline">Lorem Ipsum + Rum + Rick Quotes = Lorum Ricksum</p>
-        <p class="intro">Generate placeholder text from things Rick Sanchez has said in Rick &amp; Morty.</p>
+  <div class="site">
+    <header class="heading">
+      <div class="heading-copy">
+        <p>Lorem Ipsum + Rum + Rick Quotes = Lorum Ricksum</p>
+        <p>Generate some placeholder text from things Rick Sanchez has said in Rick &amp; Morty.</p>
       </div>
-      <div class="portal-ring" aria-hidden="true"></div>
+      <h1>Lorum Ricksum</h1>
     </header>
 
-    <main class="layout">
-      <section class="controls card" aria-labelledby="options-heading">
-        <div class="section-heading">
-          <span class="step">01</span>
-          <div>
-            <h2 id="options-heading">Make some text</h2>
-            <p class="muted">Choose your format and let Rick do the talking.</p>
-          </div>
-        </div>
-
-        <fieldset class="field">
-          <legend>How to generate text</legend>
-          <div class="choice-group">
-            <label class="radiochoice" for="wordchoice">
-              <input type="radio" name="wordtype" id="wordchoice" checked>
-              <span>Words</span>
-            </label>
-            <label class="radiochoice" for="parachoice">
-              <input type="radio" name="wordtype" id="parachoice">
-              <span>Paragraphs</span>
-            </label>
-          </div>
+    <main class="workspace">
+      <section class="options" aria-label="Text generation options">
+        <h2>How to generate text:</h2>
+        <fieldset class="radio">
+          <legend class="sr-only">Text type</legend>
+          <label class="radiochoice" for="wordchoice">
+            <input type="radio" name="wordtype" id="wordchoice" checked>
+            <span>Words</span>
+          </label>
+          <span class="or">OR</span>
+          <label class="radiochoice" for="parachoice">
+            <input type="radio" name="wordtype" id="parachoice">
+            <span>Paragraphs</span>
+          </label>
         </fieldset>
 
-        <div class="field number-field">
-          <label for="num">Number needed</label>
-          <input class="textInput" id="num" value="5" type="number" min="0" max="999" step="1" inputmode="numeric">
-        </div>
+        <label class="number-heading" for="num">Number needed:</label>
+        <input class="textInput" id="num" value="5" type="number" min="0" max="999" step="1" inputmode="numeric">
 
-        <div class="field toggle-field">
-          <div>
-            <label for="ptags" class="toggle-title">Include HTML &lt;p&gt; tags</label>
-            <p class="muted">Click Pickle Rick to toggle tags in the generated output.</p>
-          </div>
-          <input type="checkbox" id="ptags" checked>
-          <label for="ptags" class="picklerick">
-            <img alt="Pickle Rick toggle" src="https://static.wikia.nocookie.net/rickandmorty/images/4/41/Pickle_rick_transparent_edgetrimmed.png" loading="lazy">
-            <span class="toggle-state" aria-hidden="true">&lt;p&gt;</span>
-          </label>
-        </div>
+        <h2 class="pickle-instruction">Click on Pickle Rick to toggle &lt;p&gt; tags in output.</h2>
+        <input class="toggle-input" type="checkbox" id="ptags" checked>
+        <label for="ptags" class="picklerick" aria-label="Toggle paragraph tags">
+          <span class="portal" aria-hidden="true"><span class="portal-text">&lt;p&gt;&lt;/p&gt;</span></span>
+          <img src="https://static.wikia.nocookie.net/rickandmorty/images/4/41/Pickle_rick_transparent_edgetrimmed.png" alt="Pickle Rick" loading="eager">
+        </label>
 
-        <button type="button" id="gobut" class="primary-button" onclick="showWords(document.getElementById('num').value)">
-          GENERATE TEXT <span aria-hidden="true">↗</span>
+        <button type="button" id="gobut" class="generate-button" onclick="showWords(document.getElementById('num').value)">
+          GENERATE TEXT <span class="edit-symbol" aria-hidden="true">✎</span>
         </button>
       </section>
 
-      <section class="result card" aria-labelledby="result-heading">
-        <div class="result-header">
-          <div>
-            <span class="step">02</span>
-            <h2 id="result-heading">Your text</h2>
-          </div>
+      <section class="output-area" aria-label="Generated placeholder text">
+        <div class="paper" id="text">
           <button id="copybutt" class="copy-button" type="button" onclick="CopyToClipboard()" aria-label="Copy generated text" title="Copy generated text">
-            Copy text <span aria-hidden="true">⧉</span>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 3h10a2 2 0 0 1 2 2v12h-2V5H8V3Zm-4 4h10a2 2 0 0 1 2 2v11a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2Zm0 2v11h10V9H4Z"/></svg>
           </button>
-        </div>
-        <div class="paper">
           <div id="words" aria-live="polite" aria-atomic="true"></div>
-          <p class="empty-hint">Your interdimensional placeholder text will appear here.</p>
         </div>
       </section>
     </main>
-    <footer class="footer">Wubba Lubba Dub Dub.</footer>
   </div>
   <script src="script.js"></script>
 </body>
