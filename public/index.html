@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Lorum Ricksum</title>
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Pangolin&display=swap" rel="stylesheet">
+<script src="https://kit.fontawesome.com/b3000ea2ff.js" crossorigin="anonymous"></script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="grid-container">
+<header class="heading container-fluid">
+<h1>Lorum Ricksum</h1>
+<h2>Lorem Ipsum + Rum + Rick Quotes = Lorum Ricksum</h2>
+<h2>Generate some placeholder text from things Rick Sanchez has said in Rick &amp; Morty.</h2>
+<h2>I made this to help me learn AJAX - I also do paintings - Check out my <a target="_blank" rel="noopener noreferrer" href="https://www.instagram.com/adams_lockdown_paintings/">instagram</a> if you're in to abstract art!</h2>
+</header>
+<section class="text"><button id="copybutt" class="butts btn btn-success" onclick="CopyToClipboard()" title="Copy text" aria-label="Copy text"><i class="fas fa-copy"></i> Copy</button><div id="words" aria-live="polite"></div></section>
+<section class="options container-fluid">
+<h2>How to generate text:</h2>
+<div class="radio"><label class="radiochoice"><input label="Words" type="radio" name="wordtype" id="wordchoice" checked> Words</label><span>OR</span><label class="radiochoice"><input label="Paragraphs" type="radio" name="wordtype" id="parachoice"> Paragraphs</label></div>
+<h2>Number needed:</h2><input class="form-control textInput" value="5" id="num" type="number" min="0" max="999" aria-label="Number needed">
+<h2>Click on Pickle Rick to toggle &lt;p&gt; tags in output.</h2>
+<input type="checkbox" id="ptags" checked><label for="ptags" class="picklerick"><img alt="Pickle Rick" src="https://static.wikia.nocookie.net/rickandmorty/images/4/41/Pickle_rick_transparent_edgetrimmed.png"><span> &lt;p&gt; tags</span></label>
+<button type="button" id="gobut" class="butts btn btn-success" onclick="showWords(document.getElementById('num').value)">GENERATE TEXT <i class="fas fa-edit"></i></button>
+</section></div>
+<script src="script.js"></script>
+</body>
+</html>
