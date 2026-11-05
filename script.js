@@ -1,6 +1,7 @@
 // Lorum Ricksum — static JavaScript implementation.
 // The original 2022 interface is retained; no PHP or server-side code is needed.
 let dialoguePromise;
+let currentParagraphs = []; // Stored so the Pickle Rick toggle updates existing output.
 
 function loadDialogue() {
   if (!dialoguePromise) {
@@ -41,28 +42,24 @@ function generateParagraphs(lines, amount) {
 
 function renderOutput(paragraphs, includeTags) {
   const target = document.getElementById('words');
-  target.replaceChildren();
-  if (includeTags) {
-    const fragment = document.createDocumentFragment();
-    for (const paragraph of paragraphs) {
-      const node = document.createElement('p');
-      node.textContent = paragraph;
-      fragment.appendChild(node);
-    }
-    target.appendChild(fragment);
-  } else {
-    target.textContent = paragraphs.join('\n\n');
-    target.style.whiteSpace = 'pre-wrap';
-  }
-  if (includeTags) target.style.whiteSpace = 'normal';
+  // Display markup as text, not as invisible HTML elements.
+  // Each generated paragraph gets its own opening and closing tags.
+  target.textContent = paragraphs.map(paragraph =>
+    includeTags ? '<p>' + paragraph + '</p>' : paragraph
+  ).join('\n\n');
+  target.style.whiteSpace = 'pre-wrap';
 }
+
+document.getElementById('ptags').addEventListener('change', function () {
+  if (currentParagraphs.length) renderOutput(currentParagraphs, this.checked);
+});
 
 async function showWords(num) {
   const output = document.getElementById('words');
   const button = document.getElementById('gobut');
   const parsed = Number.parseInt(num, 10);
   const amount = Number.isFinite(parsed) ? Math.max(0, Math.min(999, parsed)) : 0;
-  if (amount === 0) { output.replaceChildren(); return; }
+  if (amount === 0) { currentParagraphs = []; output.replaceChildren(); return; }
   if (button.disabled) return;
 
   const asWords = document.getElementById('wordchoice').checked;
@@ -76,8 +73,10 @@ async function showWords(num) {
     const paragraphs = asWords
       ? [generateWords(lines, amount)]
       : generateParagraphs(lines, amount);
-    renderOutput(paragraphs, includeTags);
+    currentParagraphs = paragraphs;
+    renderOutput(currentParagraphs, document.getElementById('ptags').checked);
   } catch (error) {
+    currentParagraphs = [];
     output.textContent = 'Could not generate text. ' + error.message;
   } finally {
     button.disabled = false;
@@ -87,10 +86,7 @@ async function showWords(num) {
 
 async function CopyToClipboard() {
   const target = document.getElementById('words');
-  const includeTags = document.getElementById('ptags').checked;
-  const content = includeTags
-    ? Array.from(target.querySelectorAll('p')).map(p => '<p>' + p.textContent.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</p>').join('\n')
-    : target.textContent;
+  const content = target.textContent;
   try {
     if (navigator.clipboard?.writeText) {
       await navigator.clipboard.writeText(content);
